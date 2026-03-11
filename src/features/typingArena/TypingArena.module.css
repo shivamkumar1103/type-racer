@@ -1,0 +1,48 @@
+.arena {
+  width: 100%;
+  max-width: 800px;
+  position: relative;
+}
+
+.statsBar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  color: #e2b714;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.textDisplay {
+  font-size: 1.8rem;
+  line-height: 1.6;
+  letter-spacing: 1px;
+  color: #646669; /* Untyped text is dark gray so it fades into the back */
+  word-break: break-word;
+}
+
+/* Character states */
+.correct {
+  color: #d1d0c5; /* Off-white for correct */
+}
+
+.incorrect {
+  color: #ca4754; /* Soft red for mistakes */
+  background-color: rgba(
+    202,
+    71,
+    84,
+    0.2
+  ); /* Slight red background highlight */
+  border-radius: 3px;
+}
+
+.notTyped {
+  /* Inherits the #646669 from .textDisplay */
+}
+
+/* Optional: Add a subtle transition when the game finishes */
+.finished .textDisplay {
+  opacity: 0.5;
+  transition: opacity 0.5s ease;
+}
