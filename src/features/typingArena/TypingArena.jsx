@@ -1,13 +1,26 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect } from "react";
 import { useText } from "../../contexts/TestContext";
-import { initialGameState, reducer } from "./typingArenaReducer";
 import styles from "./TypingArena.module.css";
+import StatsBar from "../../components/StatsBar";
+import TextDisplay from "../../components/TextDisplay";
+import useTypingArena from "../../hooks/useTypingArena";
+import Button from "../../components/Button";
 
 function TypingArena() {
   const { text, getText } = useText();
-  const [{ userInput, status, isTimeRunning, timeRemaining }, dispatch] =
-    useReducer(reducer, initialGameState);
-  const inputRef = useRef(null);
+
+  const {
+    inputRef,
+    timeRemaining,
+    status,
+    currAccuracy,
+    currWpm,
+    previousScore,
+    handleChange,
+    userInput,
+    restartGame,
+    getNextText,
+  } = useTypingArena(text);
 
   useEffect(
     function () {
@@ -18,22 +31,18 @@ function TypingArena() {
 
   useEffect(
     function () {
-      if (timeRemaining == 0) dispatch({ type: "finish" });
-      let timer;
-      if (isTimeRunning) {
-        timer = setTimeout(() => dispatch({ type: "decTimer" }), 1000);
-      }
-      return () => clearTimeout(timer);
+      if (userInput.length !== text.length) return;
+      if (userInput.length === 0) return;
+      getNextText(text, userInput);
+      getText();
     },
-    [timeRemaining, isTimeRunning],
+    [userInput, getText, text.length, getNextText, text],
   );
 
-  function handleChange(e) {
-    if (status === "finished") return;
-
-    if (status === "waiting")
-      dispatch({ type: "start", payload: e.target.value });
-    else dispatch({ type: "input", payload: e.target.value });
+  function handleRestart() {
+    restartGame(); // set state to initial values
+    getText(); // fetch new text from api
+    inputRef.current.focus();
   }
 
   return (
@@ -42,12 +51,13 @@ function TypingArena() {
       onClick={() => inputRef.current.focus()}
       style={{ cursor: "text" }}
     >
-      {/* Sleek Stats Bar */}
-      <div className={styles.statsBar}>
-        <div>{timeRemaining}s</div>
-        {/* We will add WPM here next! */}
-        {status === "finished" && <div>Game Over!</div>}
-      </div>
+      <StatsBar
+        status={status}
+        timeRemaining={timeRemaining}
+        currAccuracy={currAccuracy}
+        currWpm={currWpm}
+        previousScore={previousScore}
+      />
 
       <input
         ref={inputRef}
@@ -56,28 +66,10 @@ function TypingArena() {
         onChange={handleChange}
         autoFocus
         style={{ opacity: 0, position: "absolute", zIndex: -1 }}
+        disabled={status === "finished"}
       />
-
-      {/* Styled Text Display */}
-      <div className={styles.textDisplay}>
-        {text.split("").map((char, index) => {
-          let colorClass = styles.notTyped;
-
-          if (userInput.charAt(index) === "") {
-            colorClass = styles.notTyped;
-          } else if (userInput.charAt(index) !== char) {
-            colorClass = styles.incorrect;
-          } else {
-            colorClass = styles.correct;
-          }
-
-          return (
-            <span key={index} className={colorClass}>
-              {char}
-            </span>
-          );
-        })}
-      </div>
+      <TextDisplay text={text} userInput={userInput} />
+      <Button onClick={handleRestart}>Restart</Button>
     </div>
   );
 }

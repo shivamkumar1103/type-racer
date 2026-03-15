@@ -1,8 +1,10 @@
 const initialGameState = {
   userInput: "",
   isTimeRunning: false,
-  timeRemaining: 10,
+  timeRemaining: 60,
   status: "waiting", // "waiting", "playing", "finished"
+  accumulatedCorrectChars: 0,
+  accumulatedTotalChars: 0,
 };
 
 function reducer(state, action) {
@@ -29,6 +31,17 @@ function reducer(state, action) {
       return {
         ...state,
         timeRemaining: state.timeRemaining - 1,
+      };
+    case "restart":
+      return initialGameState;
+    case "nextText":
+      return {
+        ...state,
+        userInput: "",
+        accumulatedCorrectChars:
+          state.accumulatedCorrectChars + action.payload.correctChars,
+        accumulatedTotalChars:
+          state.accumulatedTotalChars + action.payload.totalChars,
       };
     default:
       return state;
