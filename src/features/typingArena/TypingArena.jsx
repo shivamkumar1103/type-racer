@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import styles from "./TypingArena.module.css";
 import StatsBar from "../../components/StatsBar";
 import TextDisplay from "../../components/TextDisplay";
 import useTypingArena from "../../hooks/useTypingArena";
 import Button from "../../components/Button";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getText } from "../../services/apiText";
+import { Spinner } from "@/components/ui/spinner";
+import Error from "@/components/ui/Error";
 
 function TypingArena() {
   const { isPending, data, error } = useQuery({
@@ -42,17 +43,25 @@ function TypingArena() {
   function handleRestart() {
     restartGame(); // set state to initial values
     queryClient.invalidateQueries({ queryKey: ["text"] }); // fetch new text from api
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }
 
-  if (isPending) return <div>Loading...</div>;
-  if (error) return <div>Error fetching text</div>;
+  if (isPending)
+    return (
+      <div className="flex min-h-112 items-center justify-center rounded-[2rem] border border-white/10 bg-white/5 px-6 py-12 text-slate-200 shadow-2xl shadow-black/30 backdrop-blur">
+        <div className="flex items-center gap-3 text-sm font-medium tracking-wide text-slate-300">
+          <Spinner className="size-5 text-amber-300" />
+          Loading text
+        </div>
+      </div>
+    );
+  if (error) return <Error message={error} />;
 
   return (
     <div
-      className={`${styles.arena} ${status === "finished" ? styles.finished : ""}`}
-      onClick={() => inputRef.current.focus()}
-      style={{ cursor: "text" }}
+      className="group relative w-full max-w-5xl cursor-text rounded-[2rem] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/30 backdrop-blur sm:p-6 lg:p-8"
+      onClick={() => inputRef.current?.focus()}
+      role="presentation"
     >
       <StatsBar
         status={status}
@@ -68,7 +77,7 @@ function TypingArena() {
         value={userInput}
         onChange={handleChange}
         autoFocus
-        style={{ opacity: 0, position: "absolute", zIndex: -1 }}
+        className="absolute h-0 w-0 opacity-0"
         disabled={status === "finished"}
       />
       <TextDisplay text={text} userInput={userInput} />

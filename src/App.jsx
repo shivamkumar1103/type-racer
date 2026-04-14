@@ -18,7 +18,7 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
-          <Route index element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="Profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
