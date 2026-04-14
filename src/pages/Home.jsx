@@ -1,5 +1,4 @@
-import { TextProvider } from "../contexts/TestContext";
-import TypingArena from "../features/typingArena/typingArena";
+import TypingArena from "../features/typingArena/TypingArena";
 import styles from "./Home.module.css";
 
 function Home() {
@@ -11,9 +10,7 @@ function Home() {
         </h1>
         <p className={styles.subtitle}>A minimalist typing experience.</p>
       </header>
-      <TextProvider>
-        <TypingArena />
-      </TextProvider>
+      <TypingArena />
     </div>
   );
 }

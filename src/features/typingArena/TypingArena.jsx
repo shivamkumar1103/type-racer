@@ -1,13 +1,18 @@
 import { useEffect } from "react";
-import { useText } from "../../contexts/TestContext";
 import styles from "./TypingArena.module.css";
 import StatsBar from "../../components/StatsBar";
 import TextDisplay from "../../components/TextDisplay";
 import useTypingArena from "../../hooks/useTypingArena";
 import Button from "../../components/Button";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getText } from "../../services/apiText";
 
 function TypingArena() {
-  const { text, getText } = useText();
+  const { isPending, data, error } = useQuery({
+    queryKey: ["text"],
+    queryFn: getText,
+  });
+  const text = data?.quote ?? "";
 
   const {
     inputRef,
@@ -22,28 +27,26 @@ function TypingArena() {
     getNextText,
   } = useTypingArena(text);
 
+  const queryClient = useQueryClient();
   useEffect(
     function () {
-      getText();
-    },
-    [getText],
-  );
-
-  useEffect(
-    function () {
+      if (!text) return;
       if (userInput.length !== text.length) return;
       if (userInput.length === 0) return;
       getNextText(text, userInput);
-      getText();
+      queryClient.invalidateQueries({ queryKey: ["text"] });
     },
-    [userInput, getText, text.length, getNextText, text],
+    [userInput, getNextText, text, queryClient],
   );
 
   function handleRestart() {
     restartGame(); // set state to initial values
-    getText(); // fetch new text from api
+    queryClient.invalidateQueries({ queryKey: ["text"] }); // fetch new text from api
     inputRef.current.focus();
   }
+
+  if (isPending) return <div>Loading...</div>;
+  if (error) return <div>Error fetching text</div>;
 
   return (
     <div
