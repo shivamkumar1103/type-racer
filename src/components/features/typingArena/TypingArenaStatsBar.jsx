@@ -17,7 +17,7 @@ function renderDelta(current, previous) {
   return <span className="ml-2 text-xs font-semibold text-slate-400">+0</span>;
 }
 
-function StatsBar({
+function TypingArenaStatsBar({
   timeRemaining,
   currAccuracy,
   currWpm,
@@ -97,4 +97,4 @@ function StatsBar({
   );
 }
 
-export default StatsBar;
+export default TypingArenaStatsBar;

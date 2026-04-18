@@ -2,7 +2,7 @@ const initialGameState = {
   userInput: "",
   isTimeRunning: false,
   timeRemaining: 60,
-  status: "waiting", // "waiting", "playing", "finished"
+  status: "waiting",
   accumulatedCorrectChars: 0,
   accumulatedTotalChars: 0,
 };

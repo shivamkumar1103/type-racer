@@ -1,28 +1,11 @@
-import { BrowserRouter, Route, Routes } from "react-router";
-import Home from "./pages/Home";
-import Profile from "./pages/Profile";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 0,
-    },
-  },
-});
+import AppProviders from "@/app/providers/AppProviders";
+import AppRoutes from "@/app/routes/AppRoutes";
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="Profile" element={<Profile />} />
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <AppProviders>
+      <AppRoutes />
+    </AppProviders>
   );
 }
 

@@ -1,6 +1,11 @@
 import { cn } from "@/lib/utils";
 
-function Button({ onClick, children, className = "", disabled = false }) {
+function TypingArenaRestartButton({
+  onClick,
+  children,
+  className = "",
+  disabled = false,
+}) {
   return (
     <div className="mt-8 flex justify-center">
       <button
@@ -18,4 +23,4 @@ function Button({ onClick, children, className = "", disabled = false }) {
   );
 }
 
-export default Button;
+export default TypingArenaRestartButton;
