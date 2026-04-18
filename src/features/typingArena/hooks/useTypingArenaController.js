@@ -18,7 +18,7 @@ function useTypingArenaController() {
 
   const text = data?.quote ?? "";
   const author = data?.author ?? "Unknown";
-  console.log(author);
+
   const {
     inputRef,
     timeRemaining,
