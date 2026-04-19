@@ -8,6 +8,11 @@ function TypingArenaInput({ inputRef, userInput, handleChange, disabled }) {
       autoFocus
       className="absolute h-0 w-0 opacity-0"
       disabled={disabled}
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck="false"
+      style={{ opacity: 0, position: "absolute", pointerEvents: "none" }}
     />
   );
 }

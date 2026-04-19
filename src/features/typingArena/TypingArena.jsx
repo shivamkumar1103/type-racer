@@ -52,6 +52,7 @@ function TypingArena() {
         text={text}
         author={author}
         userInput={userInput}
+        status={status}
       />
       <TypingArenaRestartButton onClick={handleRestart}>
         Restart

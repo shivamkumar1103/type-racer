@@ -32,6 +32,11 @@ function useTypingArenaController() {
     getNextText,
   } = useTypingArena(text);
 
+  useEffect(() => {
+    const t = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(t);
+  }, [inputRef]);
+
   const queryClient = useQueryClient();
 
   useEffect(
