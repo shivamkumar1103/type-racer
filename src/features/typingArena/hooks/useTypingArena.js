@@ -12,6 +12,10 @@ import {
 } from "@/features/typingArena/store/typingArenaReducer";
 import { useDispatch } from "react-redux";
 import { saveGameResult } from "@/features/Profile/store/profileSlice";
+import {
+  normalizeTypingChar,
+  normalizeTypingValue,
+} from "@/features/typingArena/utils/normalizeTyping";
 
 function useTypingArena(text) {
   const dispatchProfile = useDispatch();
@@ -63,7 +67,11 @@ function useTypingArena(text) {
   ) {
     let correctChars = 0;
     for (let i = 0; i < currentUserInput.length; i++) {
-      if (currentUserInput.charAt(i) === currentText.charAt(i)) correctChars++;
+      if (
+        normalizeTypingChar(currentUserInput.charAt(i)) ===
+        normalizeTypingChar(currentText.charAt(i))
+      )
+        correctChars++;
     }
 
     dispatch({
@@ -85,7 +93,11 @@ function useTypingArena(text) {
 
     let correctCharsInCurrent = 0;
     for (let i = 0; i < userInput.length; i++) {
-      if (userInput.charAt(i) === text.charAt(i)) correctCharsInCurrent++;
+      if (
+        normalizeTypingChar(userInput.charAt(i)) ===
+        normalizeTypingChar(text.charAt(i))
+      )
+        correctCharsInCurrent++;
     }
 
     const totalSessionCorrect = accumulatedCorrectChars + correctCharsInCurrent;
@@ -129,12 +141,14 @@ function useTypingArena(text) {
   );
 
   function handleChange(e) {
+    const normalizedValue = normalizeTypingValue(e.target.value);
+
     if (status === "waiting") {
-      dispatch({ type: "start", payload: e.target.value });
+      dispatch({ type: "start", payload: normalizedValue });
       return;
     }
 
-    dispatch({ type: "input", payload: e.target.value });
+    dispatch({ type: "input", payload: normalizedValue });
   }
 
   return {

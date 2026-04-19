@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { normalizeTypingChar } from "@/features/typingArena/utils/normalizeTyping";
 
 function TypingArenaTextDisplay({ text, userInput, author, status }) {
   const currentIndex = userInput.length;
@@ -9,10 +10,13 @@ function TypingArenaTextDisplay({ text, userInput, author, status }) {
         let colorClass = "text-slate-500/75";
         const isCurrentTarget =
           index === currentIndex && status !== "finished" && text.length > 0;
+        const currentInputChar = userInput.charAt(index);
+        const isCorrectChar =
+          normalizeTypingChar(currentInputChar) === normalizeTypingChar(char);
 
-        if (userInput.charAt(index) === "") {
+        if (currentInputChar === "") {
           colorClass = "text-slate-500/75";
-        } else if (userInput.charAt(index) !== char) {
+        } else if (!isCorrectChar) {
           colorClass = "rounded-sm bg-rose-500/10 px-0.5 text-rose-300";
         } else {
           colorClass = "text-slate-100";
